@@ -78,7 +78,7 @@ Caused by:
 ```mermaid
 flowchart LR
 subgraph wasm
-WasmLib[src/lib.rs, impl] -->|build| Wasm[wasm binary]
+WasmLib[src/lib.rs, impl] -->|wasm component build| Wasm[wasm binary]
 end
 WasmLib[src/lib.rs, impl] -->|reference with macro, wit_bindgen::generate!| I[wit/*.wit]
  
