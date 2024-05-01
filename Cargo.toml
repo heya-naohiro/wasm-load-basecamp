@@ -1,4 +1,4 @@
-workspace = { members = ["wasm/hello-wasi-cli"] }
+workspace = { members = [ "wasm/greet", "wasm/hello-wasi-cli"] }
 [package]
 name = "wasm-load-basecamp"
 version = "0.1.0"
