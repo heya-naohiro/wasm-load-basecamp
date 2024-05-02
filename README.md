@@ -60,7 +60,7 @@ $ cargo component new --lib wasm/greet
 ```mermaid
 flowchart LR
 subgraph wasm
-WasmLib[src/lib.rs, impl] -->|wasm component build| Wasm[guest wasm]
+WasmLib[guest/src/lib.rs, impl] -->|wasm component build| Wasm[guest wasm]
 Wasm -->|wasm-tools component new ...| WasmComponent
 end
 WasmLib -.->|reference with macro, wit_bindgen::generate!| I[wit/*.wit]
