@@ -4,10 +4,23 @@ name = "wasm-load-basecamp"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "samplehost"
+path = "src/main.rs"
+required-features = ["samplehost"]
+
 [lib]
+name = "sampleguest"
 crate-type = ["cdylib"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 wit-bindgen = "0.24.0"
+anyhow = { version = "1", optional = true }
+wasmtime = { git = 'https://github.com/bytecodealliance/wasmtime', features = ['component-model'], optional = true}
+
+[features]
+default = ["samplehost"]
+samplehost = ["anyhow", "wasmtime"]
+anyhow = ["dep:anyhow"]

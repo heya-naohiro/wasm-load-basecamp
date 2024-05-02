@@ -33,7 +33,7 @@ pub trait Guest {
 }
 #[doc(hidden)]
 
-macro_rules! __export_world_host_cabi{
+macro_rules! __export_world_host_world_cabi{
   ($ty:ident with_types_in $($path_to_types:tt)*) => (const _: () = {
 
     #[export_name = "run"]
@@ -43,7 +43,7 @@ macro_rules! __export_world_host_cabi{
   };);
 }
 #[doc(hidden)]
-pub(crate) use __export_world_host_cabi;
+pub(crate) use __export_world_host_world_cabi;
 mod _rt {
 
     #[cfg(target_arch = "wasm32")]
@@ -71,23 +71,24 @@ mod _rt {
 #[allow(unused_macros)]
 #[doc(hidden)]
 
-macro_rules! __export_host_impl {
+macro_rules! __export_host_world_impl {
   ($ty:ident) => (self::export!($ty with_types_in self););
   ($ty:ident with_types_in $($path_to_types_root:tt)*) => (
-  $($path_to_types_root)*::__export_world_host_cabi!($ty with_types_in $($path_to_types_root)*);
+  $($path_to_types_root)*::__export_world_host_world_cabi!($ty with_types_in $($path_to_types_root)*);
   )
 }
 #[doc(inline)]
-pub(crate) use __export_host_impl as export;
+pub(crate) use __export_host_world_impl as export;
 
 #[cfg(target_arch = "wasm32")]
-#[link_section = "component-type:wit-bindgen:0.24.0:host:encoded world"]
+#[link_section = "component-type:wit-bindgen:0.24.0:host-world:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 183] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07=\x01A\x02\x01A\x04\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 195] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07C\x01A\x02\x01A\x04\x01\
 @\x01\x03msgs\x01\0\x03\0\x05print\x01\0\x01@\0\x01\0\x04\0\x03run\x01\x01\x04\x01\
-\x11example:host/host\x04\0\x0b\x0a\x01\0\x04host\x03\0\0\0G\x09producers\x01\x0c\
-processed-by\x02\x0dwit-component\x070.202.0\x10wit-bindgen-rust\x060.24.0";
+\x17example:host/host-world\x04\0\x0b\x10\x01\0\x0ahost-world\x03\0\0\0G\x09prod\
+ucers\x01\x0cprocessed-by\x02\x0dwit-component\x070.202.0\x10wit-bindgen-rust\x06\
+0.24.0";
 
 #[inline(never)]
 #[doc(hidden)]

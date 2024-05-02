@@ -1,7 +1,6 @@
 package example:host;
 
-world host {
+world host-world {
   import print: func(msg: string);
-
   export run: func();
 }
