@@ -1,4 +1,4 @@
-workspace = { members = [ "host", "wasm/greet", "wasm/hello-wasi-cli"] }
+workspace = { members = [ "guest","wasm/greet", "wasm/hello-wasi-cli"] }
 [package]
 name = "wasm-load-basecamp"
 version = "0.1.0"
@@ -9,9 +9,6 @@ name = "samplehost"
 path = "src/main.rs"
 required-features = ["samplehost"]
 
-[lib]
-name = "sampleguest"
-crate-type = ["cdylib"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

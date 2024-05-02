@@ -78,11 +78,42 @@ Caused by:
 ```mermaid
 flowchart LR
 subgraph wasm
-WasmLib[src/lib.rs, impl] -->|wasm component build| Wasm[wasm binary]
+WasmLib[src/lib.rs, impl] -->|wasm component build| Wasm[guest wasm]
+Wasm -->|wasm-tools component new ...| WasmComponent
 end
-WasmLib[src/lib.rs, impl] -->|reference with macro, wit_bindgen::generate!| I[wit/*.wit]
- 
-
+WasmLib -.->|reference with macro, wit_bindgen::generate!| I[wit/*.wit]
+HostSrc[src/main.rs, impl] -.->|reference wasmtime::component::bindgen!| I
+HostSrc -->|cargo build | HostApp[host binary]
+HostApp --> Run((Run))
+WasmComponent --> Run((Run))
 ```
 
-https://docs.rs/wasmtime/latest/wasmtime/component/macro.bindgen.html
+```
+├── Cargo.lock
+├── Cargo.toml
+├── README.md
+├── guest
+│   ├── Cargo.toml
+│   └── src
+│       └── lib.rs(guest wasm app source)
+├── guest.wasm(output)
+├── src
+│   └── main.rs(host app source)
+├── target
+├── wasm(not use)
+└── wit
+    └── host.wit (interface guest/host)
+```
+
+
+```bash
+# build guest wasm
+$ cargo build --release --target wasm32-unknown-unknown -p guest
+# create wasm component
+$ wasm-tools component new target/wasm32-unknown-unknown/release/guest.wasm -o guest.wasm
+# build host application
+$ cargo build --release
+# run host/wasm
+$ ./target/release/samplehost ./guest.wasm 
+[Host]WasmLog: Hello
+```
