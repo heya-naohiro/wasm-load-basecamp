@@ -38,41 +38,23 @@ $ cargo component new --lib wasm/greet
             └── main.rs
 ```
 
-### create guest wasm lib and wit
+## Implement guest/host
+
+### Overview
 ```
-src/
-├── lib.rs
-├── main.rs
+├── Cargo.lock
+├── Cargo.toml
+├── README.md
+├── guest
+│   ├── Cargo.toml
+│   └── src
+│       └── lib.rs(guest wasm app source)
+├── guest.wasm(output)
+├── src
+│   └── main.rs(host app source)
+├── target
 └── wit
-    └── host.wit
-```
-
-```
-$ cargo add wit-bindgen
-```
-
-## (if have not installed wit-bindgen-cli)
-```bash
-$ cargo install wit-bindgen-cli
-```
-
-## generate host code (not need)
-```bash
-[~/wasm-load-basecamp/src]$wit-bindgen rust ../wit/host.wit 
-```
-
-## wasm component build
-```bash
-$ cargo component build
-```
-## 
-```bash
-[~/wasm-load-basecamp]$wasmtime target/wasm32-wasi/debug/wasm_load_basecamp.wasm 
-Error: failed to run main module `target/wasm32-wasi/debug/wasm_load_basecamp.wasm`
-
-Caused by:
-    0: component imports function `print`, but a matching implementation was not found in the linker
-    1: function implementation is missing
+    └── host.wit (interface guest/host)
 ```
 
 ```mermaid
@@ -88,26 +70,10 @@ HostApp --> Run((Run))
 WasmComponent --> Run((Run))
 ```
 
-```
-├── Cargo.lock
-├── Cargo.toml
-├── README.md
-├── guest
-│   ├── Cargo.toml
-│   └── src
-│       └── lib.rs(guest wasm app source)
-├── guest.wasm(output)
-├── src
-│   └── main.rs(host app source)
-├── target
-├── wasm(not use)
-└── wit
-    └── host.wit (interface guest/host)
-```
 
 
 ```bash
-# build guest wasm
+# build guest wasm (without wasi)
 $ cargo build --release --target wasm32-unknown-unknown -p guest
 # create wasm component
 $ wasm-tools component new target/wasm32-unknown-unknown/release/guest.wasm -o guest.wasm
@@ -117,3 +83,9 @@ $ cargo build --release
 $ ./target/release/samplehost ./guest.wasm 
 [Host]WasmLog: Hello
 ```
+
+## Reference
+
+https://zenn.dev/chikoski/articles/run-wasm-component-with-wasmtime-and-bindgen
+
+https://qiita.com/fits/items/6e142cd0e7fd200476e8
